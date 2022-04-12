@@ -1,0 +1,16 @@
+{
+  "domain": "intex_spa",
+  "name": "Intex SPA",
+  "version": "0.0.20210921.1",
+  "config_flow": true,
+  "documentation": "https://www.home-assistant.io/integrations/intex_spa",
+  "requirements": [],
+  "ssdp": [],
+  "zeroconf": [],
+  "homekit": {},
+  "dependencies": [],
+  "codeowners": [
+    "@elkropac"
+  ],
+  "iot_class": "local_polling"
+}
