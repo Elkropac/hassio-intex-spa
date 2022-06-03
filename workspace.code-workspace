@@ -1,0 +1,10 @@
+{
+	"folders": [
+		{
+			"path": "custom_components/intex_spa"
+		},
+		{
+			"path": "../home-assistant"
+		}
+	]
+}

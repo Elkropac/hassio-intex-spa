@@ -16,7 +16,8 @@ class Telnet:
     def connect(self):
         try:
             #self.command('{"data":"8888060FEE0F01DA","sid":"1630705186378","type":1}')
-            self.command('8888060FEE0F01DA')
+            #self.command('8888060FEE0F01DA')
+            _LOGGER.info('ok')
         except ConnectionResetError as error:
             raise ConnectionResetError
 
@@ -48,4 +49,15 @@ class Telnet:
                 'Command "%s" failed with exception: %s', command, repr(error)
             )
             return None
+
+    def get_update(self):
+        result = {
+            "sid":"1630705186378",
+            "data":"FFFF110F0101001D000000008080801E000021",
+            "result":"ok",
+            "type":2
+        }
+        #response = json.dumps(command.encode("ASCII"))
+        #result = json.loads(response.decode("ASCII").strip())
+        return result
 
