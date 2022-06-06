@@ -1,6 +1,8 @@
 import json
 import telnetlib
 import time
+from datetime import datetime
+
 
 #from .const import LOGGER
 import logging
@@ -24,10 +26,12 @@ class Spa:
 
     def command(self, data):
         try:
+            sid = datetime.utcnow().strftime('%s%f')[:-3]
             command = {
                 "data": data,
                 "sid": str(int(time.time())) + "001",
                 "type": 1
+                "sid": sid,
             }
 
             command = json.dumps(command)
