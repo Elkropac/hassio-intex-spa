@@ -1,7 +1,7 @@
 """The Intex SPA integration."""
 from __future__ import annotations
 
-from .telnet import Telnet
+from .spa import Spa
 
 import logging
 _LOGGER = logging.getLogger(__name__)
@@ -10,7 +10,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
-from .const import DOMAIN, DATA_TELNET_CLIENT, DATA_COORDINATOR
+from .const import DOMAIN, DATA_CLIENT, DATA_COORDINATOR
 
 # TODO List the platforms that you want to support.
 # For your initial PR, limit it to 1 platform.
@@ -24,13 +24,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     _LOGGER.error(entry.data["host"])
     #hass.data[DOMAIN][entry.entry_id] = Telnet(entry.data["host"], entry.data["port"])
 
-    telnet = Telnet(entry.data["host"], entry.data["port"])
+    spa = Spa(entry.data["host"], entry.data["port"])
     coordinator = DataUpdateCoordinator(
         hass,
         _LOGGER,
         # Name of the data. For logging purposes.
         name=DOMAIN,
-        update_method=telnet.get_update,
+        update_method=spa.get_update,
         # Polling interval. Will only be polled if there are subscribers.
         update_interval=60,
     )
@@ -38,7 +38,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     #await coordinator.async_refresh()
 
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = {
-        DATA_TELNET_CLIENT: telnet,
+        DATA_CLIENT: spa,
         DATA_COORDINATOR: coordinator
      
     }
