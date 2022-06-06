@@ -24,14 +24,14 @@ class Spa:
             raise ConnectionResetError
 
 
-    def command(self, data):
+    def command(self, msg_data, msg_type = 1):
         try:
             sid = datetime.utcnow().strftime('%s%f')[:-3]
             command = {
-                "data": data,
-                "sid": str(int(time.time())) + "001",
-                "type": 1
+                "data": msg_data,
+                #"sid": str(int(time.time())) + "001",
                 "sid": sid,
+                "type": msg_type
             }
 
             command = json.dumps(command)
