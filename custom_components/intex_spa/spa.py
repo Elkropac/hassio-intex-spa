@@ -71,3 +71,23 @@ class Spa:
         #result = json.loads(response.decode("ASCII").strip())
         return result
 
+    def get_device_info(self):
+        response = self.command("1654467840319", 3)
+        data = json.loads(response['data'])
+        info = {
+            'ip': data['ip'],
+            'dtype': data['dtype'],
+            'uid': data['uid'],
+            'name': ''
+        }
+
+        #wild guess here, original app says, my spa is "Bubble SPA V28062"
+        #end of my uid string is 2000008062
+        if data['dtype'] == 'spa':
+            info['name'] = 'Bubble SPA '
+        if len(data['uid']) == 26:
+            if data['uid'][16:17:1] == '2':
+                info['name'] += 'V2'
+            info['name'] += data['uid'][22:26:1]
+
+        return info
