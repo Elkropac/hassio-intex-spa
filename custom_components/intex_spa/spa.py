@@ -38,7 +38,8 @@ class Spa:
             
             telnet = telnetlib.Telnet(self._host, self._port)
             telnet.write(command.encode("ASCII") + b"\r")
-            response = telnet.read_until(b"\r", timeout=self._timeout)
+            response = telnet.read_until(b"\n", timeout=self._timeout)
+            
             _LOGGER.debug("telnet response: %s", response.decode("ASCII").strip())
             result = json.loads(response.decode("ASCII").strip())
 
