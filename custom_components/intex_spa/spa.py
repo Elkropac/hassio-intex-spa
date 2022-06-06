@@ -41,6 +41,11 @@ class Spa:
             response = telnet.read_until(b"\r", timeout=self._timeout)
             _LOGGER.debug("telnet response: %s", response.decode("ASCII").strip())
             result = json.loads(response.decode("ASCII").strip())
+
+            if result["sid"] != sid:
+                _LOGGER.error("sid in response differs from sid in request")
+                raise ConnectionRefusedError
+                return None
             return result
         except ConnectionResetError as error:
             _LOGGER.info(
