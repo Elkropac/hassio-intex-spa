@@ -3,3 +3,4 @@
 DOMAIN = "intex_spa"
 DATA_CLIENT = "client"
 DATA_COORDINATOR = "coordinator"
+ATTR_MANUFACTURER = "Intex"
