@@ -21,11 +21,12 @@ class Spa:
 
     def connect(self):
         try:
-            #self.command('{"data":"8888060FEE0F01DA","sid":"1630705186378","type":1}')
-            #self.command('8888060FEE0F01DA')
-            _LOGGER.info('ok')
-        except ConnectionResetError as error:
+            result = self.get_device_info()
+        except Exception as e:
             raise ConnectionResetError
+
+        return result
+        #return True
 
 
     def command(self, msg_data, msg_type = 1):
