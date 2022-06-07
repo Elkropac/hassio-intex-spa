@@ -83,17 +83,21 @@ class Spa:
             'ip': data['ip'],
             'dtype': data['dtype'],
             'uid': data['uid'],
-            'name': ''
+            'model': 'Unknown SPA',
+            'type': '0000'
         }
 
         #wild guess here, original app says, my spa is "Bubble SPA V28062"
         #end of my uid string is 2000008062
         if data['dtype'] == 'spa':
-            info['name'] = 'Bubble SPA '
-        if len(data['uid']) == 26:
-            if data['uid'][16:17:1] == '2':
-                info['name'] += 'V2'
-            info['name'] += data['uid'][22:26:1]
+            if len(data['uid']) == 26:
+                info["type"] = type = data['uid'][22:26:1]
+                #https://community.home-assistant.io/t/intex-pure-spa-wifi-control/323591/25
+                if  type == "8062":
+                    info['model'] = 'Bubble SPA V2' + type
+                #https://community.home-assistant.io/t/intex-pure-spa-wifi-control/323591/26
+                elif type == "2448":
+                    info['model'] = 'Bubble SPA ' + type
 
         return info
 
