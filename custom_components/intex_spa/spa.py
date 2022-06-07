@@ -1,4 +1,6 @@
+#from cmath import inf
 import json
+from opcode import hasconst
 import telnetlib
 import time
 from datetime import datetime
@@ -6,6 +8,8 @@ from datetime import datetime
 
 #from .const import LOGGER
 import logging
+
+#from config_flow import CannotConnect
 
 _LOGGER = logging.getLogger(__name__)
 
