@@ -10,7 +10,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
-from .const import DOMAIN, DATA_CLIENT, DATA_COORDINATOR
+from .const import ATTR_MANUFACTURER, DOMAIN, DATA_CLIENT, DATA_COORDINATOR
 
 # TODO List the platforms that you want to support.
 # For your initial PR, limit it to 1 platform.
@@ -25,6 +25,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     #hass.data[DOMAIN][entry.entry_id] = Telnet(entry.data["host"], entry.data["port"])
 
     spa = Spa(entry.data["host"], entry.data["port"])
+
+    try:
+        info = await spa.connect()
+    except Exception as e:
+        return False
+
     coordinator = DataUpdateCoordinator(
         hass,
         _LOGGER,
@@ -35,7 +41,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         update_interval=60,
     )
 
-    #await coordinator.async_refresh()
 
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = {
         DATA_CLIENT: spa,
