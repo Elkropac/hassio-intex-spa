@@ -96,3 +96,23 @@ class Spa:
             info['name'] += data['uid'][22:26:1]
 
         return info
+
+
+#
+#class SpaAsync:
+#    def __init__(self, hass, config_entry):
+#        self.hass = hass
+#        self.config_entry = config_entry
+#        self.spa = None
+#
+#    async def async_setup(self):
+#        self.spa = await get_spa(self.hass, self.config_entry.data['host'], self.config_entry.data['port'])
+
+#async def get_spa(hass, host, port):
+#    spa = Spa(host, port)
+#    try:
+#        spa.connect()
+#    except:
+#        raise CannotConnect
+#        
+#    return spa
