@@ -66,15 +66,13 @@ class Spa:
             return None
 
     def get_update(self):
-        result = {
-            "sid":"1630705186378",
-            "data":"FFFF110F0101001D000000008080801E000021",
-            "result":"ok",
-            "type":2
-        }
         #response = json.dumps(command.encode("ASCII"))
         #result = json.loads(response.decode("ASCII").strip())
-        return result
+
+        response = self.command("8888060FEE0F01DA")
+        if response["result"] != "ok":
+            return None
+        return response["data"]
 
     def get_device_info(self):
         response = self.command("1654467840319", 3)
