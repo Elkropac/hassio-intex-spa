@@ -1,7 +1,7 @@
 """Config flow for Intex SPA integration."""
 from __future__ import annotations
 
-from .telnet import Telnet
+from .spa import Spa
 
 import logging
 from typing import Any
@@ -13,7 +13,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.exceptions import HomeAssistantError
 
-from .const import DOMAIN
+from .const import ATTR_MANUFACTURER, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -24,22 +24,6 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
         vol.Required("port", default=8990): int,
     }
 )
-
-
-class PlaceholderHub:
-    """Placeholder class to make tests pass.
-
-    TODO Remove this placeholder class and replace with things from your PyPI package.
-    """
-
-    def __init__(self, host: str) -> None:
-        """Initialize."""
-        self.host = host
-
-    async def authenticate(self, username: str, password: str) -> bool:
-        """Test if we can authenticate with the host."""
-        return True
-
 
 async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str, Any]:
     """Validate the user input allows us to connect.
@@ -54,18 +38,26 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
     #     your_validate_func, data["username"], data["password"]
     # )
 
-    telnet = Telnet(data["host"], data["port"])
     
-    try:
-        await hass.async_add_executor_job(
-            telnet.connect
-            )
-    except (ConnectionResetError):
-        raise CannotConnect
-    except:
-        raise Exception
+    #try:
+    #    spa = get_spa(hass, data["host"], data["port"])
+    #except (ConnectionResetError):
+    #    raise CannotConnect
+    #except:
+    #    raise Exception
+    #info = spa.get_device_info()
 
-#    if not await telnet.command('{"data":"8888060FEE0F01DA","sid":"1630705186378","type":1}'):
+    spa = Spa(data["host"], data["port"])
+    info = await hass.async_add_executor_job(spa.connect)
+
+
+    data['info'] = info
+    data['title'] = ATTR_MANUFACTURER + info['model']
+    
+    #return self.async_create_entry(title=desc, data=data)
+    return data
+
+#    if not await spa.command('{"data":"8888060FEE0F01DA","sid":"1630705186378","type":1}'):
 #        raise CannotConnect
 
     #hub = PlaceholderHub(data["host"])
@@ -100,7 +92,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         try:
             info = await validate_input(self.hass, user_input)
-            return self.async_create_entry(title=info["title"], data=user_input)
+            return self.async_create_entry(title=info["title"], data=info)
         except CannotConnect:
             errors["base"] = "cannot_connect"
         except InvalidAuth:
