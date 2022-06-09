@@ -21,13 +21,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Intex SPA from a config entry."""
     # TODO Store an API object for your platforms to access
     # hass.data[DOMAIN][entry.entry_id] = MyApi(...)
-    _LOGGER.error(entry.data["host"])
+    #_LOGGER.error(entry.data["host"])
     #hass.data[DOMAIN][entry.entry_id] = Telnet(entry.data["host"], entry.data["port"])
 
     spa = Spa(entry.data["host"], entry.data["port"])
 
     try:
-        info = await spa.connect()
+        info = await hass.async_add_executor_job(spa.connect)
     except Exception as e:
         return False
 
@@ -40,6 +40,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # Polling interval. Will only be polled if there are subscribers.
         update_interval=60,
     )
+    await coordinator.async_refresh()
 
 
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = {

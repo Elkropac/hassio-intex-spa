@@ -52,7 +52,7 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
 
 
     data['info'] = info
-    data['title'] = ATTR_MANUFACTURER + info['model']
+    data['title'] = ATTR_MANUFACTURER + " " + info['model']
     
     #return self.async_create_entry(title=desc, data=data)
     return data

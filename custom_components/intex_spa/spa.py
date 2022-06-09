@@ -19,9 +19,9 @@ class Spa:
         self._port = port
         self._timeout = 10
 
-    def connect(self):
+    async def connect(self):
         try:
-            result = self.get_device_info()
+            result = await self.get_device_info()
         except Exception as e:
             raise ConnectionResetError
 
@@ -29,12 +29,11 @@ class Spa:
         #return True
 
 
-    def command(self, msg_data, msg_type = 1):
+    async def command(self, msg_data, msg_type = 1):
         try:
             sid = datetime.utcnow().strftime('%s%f')[:-3]
             command = {
                 "data": msg_data,
-                #"sid": str(int(time.time())) + "001",
                 "sid": sid,
                 "type": msg_type
             }
@@ -65,29 +64,30 @@ class Spa:
             )
             return None
 
-    def get_update(self):
+    async def get_update(self):
         #response = json.dumps(command.encode("ASCII"))
         #result = json.loads(response.decode("ASCII").strip())
 
-        response = self.command("8888060FEE0F01DA")
+        response = await self.command("8888060FEE0F01DA")
         if response["result"] != "ok":
             return None
         return response["data"]
 
-    def get_device_info(self):
-        response = self.command("1654467840319", 3)
+    async def get_device_info(self):
+        response = await self.command("1654467840319", 3)
         data = json.loads(response['data'])
         info = {
             'ip': data['ip'],
             'dtype': data['dtype'],
             'uid': data['uid'],
-            'model': 'Unknown SPA',
+            'model': 'Unknown',
             'type': '0000'
         }
 
         #wild guess here, original app says, my spa is "Bubble SPA V28062"
         #end of my uid string is 2000008062
         if data['dtype'] == 'spa':
+            info['model'] += ' SPA'
             if len(data['uid']) == 26:
                 info["type"] = type = data['uid'][22:26:1]
                 #https://community.home-assistant.io/t/intex-pure-spa-wifi-control/323591/25
