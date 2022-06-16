@@ -48,8 +48,10 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
     #info = spa.get_device_info()
 
     spa = Spa(data["host"], data["port"])
-    info = await hass.async_add_executor_job(spa.connect)
+    #info = (await hass.async_add_executor_job(spa.get_device_info))
+    info = (await spa.connect())
 
+    _LOGGER.exception(info)
 
     data['info'] = info
     data['title'] = ATTR_MANUFACTURER + " " + info['model']
