@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from intex_spa.intex_spa import IntexSpa
 
+import datetime
 import logging
 _LOGGER = logging.getLogger(__name__)
 
@@ -29,12 +30,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         name=DOMAIN,
         update_method=spa.async_update_status,
         # Polling interval. Will only be polled if there are subscribers.
-        update_interval=60,
+        update_interval=datetime.timedelta(seconds=30),
     )
-    await coordinator.async_refresh()
+    await coordinator.async_config_entry_first_refresh()
 
-
-    hass.data.setdefault(DOMAIN, {})[entry.entry_id] = {
+    hass.data.setdefault(DOMAIN, {})
+    hass.data[DOMAIN][entry.entry_id] = {
         DATA_CLIENT: spa,
         DATA_COORDINATOR: coordinator
      
