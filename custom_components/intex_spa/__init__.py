@@ -40,6 +40,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
      
     }
 
+    device_registry = await hass.helpers.device_registry.async_get_registry()
+    device_registry.async_get_or_create(
+        config_entry_id=entry.entry_id,
+        identifiers={('uid', entry.data['info']['uid'])},
+        manufacturer=ATTR_MANUFACTURER,
+        model=entry.data['info']['model'],
+        name=ATTR_MANUFACTURER+" "+entry.data['info']['model']
+    )
+
     hass.config_entries.async_setup_platforms(entry, PLATFORMS)
 
     return True
