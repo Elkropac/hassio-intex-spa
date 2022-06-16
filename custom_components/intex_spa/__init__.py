@@ -1,7 +1,7 @@
 """The Intex SPA integration."""
 from __future__ import annotations
 
-from .spa import Spa
+from intex_spa.intex_spa import IntexSpa
 
 import logging
 _LOGGER = logging.getLogger(__name__)
@@ -30,13 +30,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         info = await hass.async_add_executor_job(spa.connect)
     except Exception as e:
         return False
+    spa = IntexSpa(entry.data["host"])
 
     coordinator = DataUpdateCoordinator(
         hass,
         _LOGGER,
         # Name of the data. For logging purposes.
         name=DOMAIN,
-        update_method=spa.get_update,
+        update_method=spa.async_update_status,
         # Polling interval. Will only be polled if there are subscribers.
         update_interval=60,
     )
