@@ -57,21 +57,6 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
     #return self.async_create_entry(title=desc, data=data)
     return data
 
-#    if not await spa.command('{"data":"8888060FEE0F01DA","sid":"1630705186378","type":1}'):
-#        raise CannotConnect
-
-    #hub = PlaceholderHub(data["host"])
-
-    #if not await hub.authenticate(data["username"], data["password"]):
-    #    raise InvalidAuth
-
-    # If you cannot connect:
-    # throw CannotConnect
-    # If the authentication is wrong:
-    # InvalidAuth
-
-    # Return info that you want to store in the config entry.
-    return {"title": "SPA"}
 
 
 class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
