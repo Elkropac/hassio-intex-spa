@@ -21,7 +21,7 @@ class Spa:
 
     async def connect(self):
         try:
-            result = await self.get_device_info()
+            result = (await self.get_device_info())
         except Exception as e:
             raise ConnectionResetError
 
@@ -68,13 +68,13 @@ class Spa:
         #response = json.dumps(command.encode("ASCII"))
         #result = json.loads(response.decode("ASCII").strip())
 
-        response = await self.command("8888060FEE0F01DA")
+        response = (await self.command("8888060FEE0F01DA"))
         if response["result"] != "ok":
             return None
         return response["data"]
 
     async def get_device_info(self):
-        response = await self.command("1654467840319", 3)
+        response = (await self.command("1654467840319", 3))
         data = json.loads(response['data'])
         info = {
             'ip': data['ip'],
