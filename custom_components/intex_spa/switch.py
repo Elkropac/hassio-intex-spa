@@ -18,6 +18,7 @@ _LOGGER = logging.getLogger(__name__)
 
 from .const import DOMAIN
 from .const import DOMAIN, DATA_CLIENT, DATA_COORDINATOR
+from .model import IntexSpaEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -28,29 +29,32 @@ async def async_setup_entry(
     """Setup the sensor platform."""
     coordinator = hass.data[DOMAIN][entry.entry_id][DATA_COORDINATOR]
     spa = hass.data[DOMAIN][entry.entry_id][DATA_CLIENT]
-    async_add_entities([SpaPowerSwitch(coordinator, spa)], True)
-    async_add_entities([SpaFilterSwitch(coordinator, spa)], True)
-    async_add_entities([SpaHeaterSwitch(coordinator, spa)], True)
-    async_add_entities([SpaBubblesSwitch(coordinator, spa)], True)
+    info = entry.data['info']
+
+    async_add_entities([SpaPowerSwitch(coordinator, spa, info)], True)
+    async_add_entities([SpaFilterSwitch(coordinator, spa, info)], True)
+    async_add_entities([SpaHeaterSwitch(coordinator, spa, info)], True)
+    async_add_entities([SpaBubblesSwitch(coordinator, spa, info)], True)
 
 
-class SpaPowerSwitch(CoordinatorEntity):
+class SpaPowerSwitch(IntexSpaEntity):
     """Representation of a sensor."""
 
     _attr_name = "SPA power switch"
-    def __init__(self, coordinator: DataUpdateCoordinator, spa: IntexSpa):
+    def __init__(self, coordinator: DataUpdateCoordinator, spa: IntexSpa, info):
         super().__init__(coordinator)
         self.spa = spa
-        #self.attrs = {}
+        self.info = info
+        self._attr_unique_id = f"{self.info['unique_id']}_power_switch"
         self._state = 0
 
-    @property
-    def should_pool(self):
-        return False
+#    @property
+#    def should_pool(self):
+#        return False
 
     @property
     def is_on(self) -> bool:
-        return bool(self.coordinator.data.power)
+        return self.coordinator.data.power
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         await self.spa.async_set_power(False)
@@ -59,14 +63,16 @@ class SpaPowerSwitch(CoordinatorEntity):
     async def async_turn_on(self, **kwargs: Any) -> None:
         await self.spa.async_set_power(True)
 
-class SpaFilterSwitch(CoordinatorEntity):
+class SpaFilterSwitch(IntexSpaEntity):
     """Representation of a sensor."""
 
     _attr_name = "SPA filter switch"
-    def __init__(self, coordinator: DataUpdateCoordinator, spa: IntexSpa):
+    def __init__(self, coordinator: DataUpdateCoordinator, spa: IntexSpa, info):
         super().__init__(coordinator)
         self.spa = spa
+        self.info = info
         #self.attrs = {}
+        self._attr_unique_id = f"{self.info['unique_id']}_filter_switch"
         self._state = 0
 
     @property
@@ -75,7 +81,7 @@ class SpaFilterSwitch(CoordinatorEntity):
 
     @property
     def is_on(self) -> bool:
-        return bool(self.coordinator.data.filter)
+        return self.coordinator.data.filter
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         await self.spa.async_set_filter(False)
@@ -84,14 +90,15 @@ class SpaFilterSwitch(CoordinatorEntity):
     async def async_turn_on(self, **kwargs: Any) -> None:
         await self.spa.async_set_filter(True)
 
-class SpaHeaterSwitch(CoordinatorEntity):
+class SpaHeaterSwitch(IntexSpaEntity):
     """Representation of a sensor."""
 
     _attr_name = "SPA heater switch"
-    def __init__(self, coordinator: DataUpdateCoordinator, spa: IntexSpa):
+    def __init__(self, coordinator: DataUpdateCoordinator, spa: IntexSpa, info):
         super().__init__(coordinator)
         self.spa = spa
-        #self.attrs = {}
+        self.info = info
+        self._attr_unique_id = f"{self.info['unique_id']}_heater_switch"
         self._state = 0
 
     @property
@@ -100,7 +107,7 @@ class SpaHeaterSwitch(CoordinatorEntity):
 
     @property
     def is_on(self) -> bool:
-        return bool(self.coordinator.data.heater)
+        return self.coordinator.data.heater
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         await self.spa.async_set_heater(False)
@@ -109,14 +116,15 @@ class SpaHeaterSwitch(CoordinatorEntity):
     async def async_turn_on(self, **kwargs: Any) -> None:
         await self.spa.async_set_heater(True)
 
-class SpaBubblesSwitch(CoordinatorEntity):
+class SpaBubblesSwitch(IntexSpaEntity):
     """Representation of a sensor."""
 
     _attr_name = "SPA bubbles switch"
-    def __init__(self, coordinator: DataUpdateCoordinator, spa: IntexSpa):
+    def __init__(self, coordinator: DataUpdateCoordinator, spa: IntexSpa, info):
         super().__init__(coordinator)
         self.spa = spa
-        #self.attrs = {}
+        self.info = info
+        self._attr_unique_id = f"{self.info['unique_id']}_bubbles_switch"
         self._state = 0
 
     @property
@@ -125,7 +133,7 @@ class SpaBubblesSwitch(CoordinatorEntity):
 
     @property
     def is_on(self) -> bool:
-        return bool(self.coordinator.data.bubble)
+        return self.coordinator.data.bubble
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         await self.spa.async_set_bubbles(False)

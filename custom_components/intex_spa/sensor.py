@@ -17,8 +17,8 @@ import json
 import logging
 _LOGGER = logging.getLogger(__name__)
 
-from .const import DOMAIN
 from .const import DOMAIN, DATA_CLIENT, DATA_COORDINATOR
+from .model import IntexSpaEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -28,11 +28,13 @@ async def async_setup_entry(
 ) -> None:
     """Setup the sensor platform."""
     coordinator = hass.data[DOMAIN][entry.entry_id][DATA_COORDINATOR]
-    async_add_entities([SpaCurrentTemperature(coordinator)], True)
-    async_add_entities([SpaPresetTemperature(coordinator)], True)
+    info = entry.data['info']
+
+    async_add_entities([SpaCurrentTemperature(coordinator, info)], True)
+    async_add_entities([SpaPresetTemperature(coordinator, info)], True)
 
 
-class SpaCurrentTemperature(CoordinatorEntity):
+class SpaCurrentTemperature(IntexSpaEntity):
     """Representation of a sensor."""
 
     _attr_name = "SPA current temperature"
@@ -40,9 +42,11 @@ class SpaCurrentTemperature(CoordinatorEntity):
     _attr_device_class = SensorDeviceClass.TEMPERATURE
     _attr_state_class = SensorStateClass.MEASUREMENT
 
-    def __init__(self, coordinator: DataUpdateCoordinator):
+    def __init__(self, coordinator: DataUpdateCoordinator, info):
         super().__init__(coordinator)
-        #self.attrs = {}
+        self.info = info
+
+        self._attr_unique_id = f"{self.info['unique_id']}_current_temperature"
         self._state = 0
 
     @property
@@ -60,7 +64,7 @@ class SpaCurrentTemperature(CoordinatorEntity):
     #def extra_state_attributes(self):
     #    return self.attrs
 
-class SpaPresetTemperature(CoordinatorEntity):
+class SpaPresetTemperature(IntexSpaEntity):
     """Representation of a sensor."""
 
     _attr_name = "SPA preset temperature"
@@ -68,9 +72,11 @@ class SpaPresetTemperature(CoordinatorEntity):
     _attr_device_class = SensorDeviceClass.TEMPERATURE
     _attr_state_class = SensorStateClass.MEASUREMENT
 
-    def __init__(self, coordinator: DataUpdateCoordinator):
+    def __init__(self, coordinator: DataUpdateCoordinator, info):
         super().__init__(coordinator)
-        #self.attrs = {}
+        self.info = info
+
+        self._attr_unique_id = f"{self.info['unique_id']}_preset_temperature"
         self._state = 0
 
     @property
