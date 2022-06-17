@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from .spa import Spa
 
+import hashlib
 import logging
 from typing import Any
 
@@ -51,9 +52,10 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
     #info = (await hass.async_add_executor_job(spa.get_device_info))
     info = (await spa.connect())
 
-    _LOGGER.exception(info)
-
+    unique_id = info['ip'] + ' ' + info['uid']
+    unique_id = hashlib.md5(unique_id.encode())
     data['info'] = info
+    data['info']['unique_id'] = unique_id.hexdigest()
     data['title'] = ATTR_MANUFACTURER + " " + info['model']
     
     #return self.async_create_entry(title=desc, data=data)
