@@ -1,7 +1,10 @@
 
 from typing import Any
 
-from homeassistant.core import HomeAssistant
+from homeassistant.components.switch import (
+    DEVICE_CLASS_SWITCH
+)
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import TEMP_CELSIUS
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -41,32 +44,39 @@ class SpaPowerSwitch(IntexSpaEntity):
     """Representation of a sensor."""
 
     _attr_name = "SPA power switch"
+    _attr_device_class = DEVICE_CLASS_SWITCH
+
     def __init__(self, coordinator: DataUpdateCoordinator, spa: IntexSpa, info):
         super().__init__(coordinator)
         self.spa = spa
         self.info = info
         self._attr_unique_id = f"{self.info['unique_id']}_power_switch"
-        self._state = 0
-
-#    @property
-#    def should_pool(self):
-#        return False
+        self._attr_is_on = self.coordinator.data.power
 
     @property
     def is_on(self) -> bool:
+        _LOGGER.debug("State" + str(self.coordinator.data.power))
+        _LOGGER.info("State" + str(self.coordinator.data.power))
         return self.coordinator.data.power
 
     async def async_turn_off(self, **kwargs: Any) -> None:
-        await self.spa.async_set_power(False)
+        status = (await self.spa.async_set_power(False))
+        self._attr_is_on = status.power
+        self.coordinator.data = status
 
 
     async def async_turn_on(self, **kwargs: Any) -> None:
-        await self.spa.async_set_power(True)
+        status = (await self.spa.async_set_power(True))
+        self._attr_is_on = status.power
+        self.coordinator.data = status
+
 
 class SpaFilterSwitch(IntexSpaEntity):
     """Representation of a sensor."""
 
     _attr_name = "SPA filter switch"
+    _attr_device_class = DEVICE_CLASS_SWITCH
+
     def __init__(self, coordinator: DataUpdateCoordinator, spa: IntexSpa, info):
         super().__init__(coordinator)
         self.spa = spa
@@ -74,10 +84,6 @@ class SpaFilterSwitch(IntexSpaEntity):
         #self.attrs = {}
         self._attr_unique_id = f"{self.info['unique_id']}_filter_switch"
         self._state = 0
-
-    @property
-    def should_pool(self):
-        return False
 
     @property
     def is_on(self) -> bool:
@@ -94,16 +100,14 @@ class SpaHeaterSwitch(IntexSpaEntity):
     """Representation of a sensor."""
 
     _attr_name = "SPA heater switch"
+    _attr_device_class = DEVICE_CLASS_SWITCH
+
     def __init__(self, coordinator: DataUpdateCoordinator, spa: IntexSpa, info):
         super().__init__(coordinator)
         self.spa = spa
         self.info = info
         self._attr_unique_id = f"{self.info['unique_id']}_heater_switch"
         self._state = 0
-
-    @property
-    def should_pool(self):
-        return False
 
     @property
     def is_on(self) -> bool:
@@ -120,16 +124,14 @@ class SpaBubblesSwitch(IntexSpaEntity):
     """Representation of a sensor."""
 
     _attr_name = "SPA bubbles switch"
+    _attr_device_class = DEVICE_CLASS_SWITCH
+
     def __init__(self, coordinator: DataUpdateCoordinator, spa: IntexSpa, info):
         super().__init__(coordinator)
         self.spa = spa
         self.info = info
         self._attr_unique_id = f"{self.info['unique_id']}_bubbles_switch"
         self._state = 0
-
-    @property
-    def should_pool(self):
-        return False
 
     @property
     def is_on(self) -> bool:
