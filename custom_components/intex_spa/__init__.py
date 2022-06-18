@@ -1,17 +1,17 @@
 """The Intex SPA integration."""
 from __future__ import annotations
 
-from intex_spa.intex_spa import IntexSpa
-
 import datetime
 import logging
-_LOGGER = logging.getLogger(__name__)
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
+from intex_spa.intex_spa import IntexSpa
 
 from .const import ATTR_MANUFACTURER, DOMAIN, DATA_CLIENT, DATA_COORDINATOR
+
+_LOGGER = logging.getLogger(__name__)
 
 # TODO List the platforms that you want to support.
 # For your initial PR, limit it to 1 platform.

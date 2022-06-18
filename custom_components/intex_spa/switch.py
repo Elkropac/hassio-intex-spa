@@ -1,26 +1,20 @@
 
+import logging
 from typing import Any
 
 from homeassistant.components.switch import (
     DEVICE_CLASS_SWITCH,
     SwitchEntity
 )
-from homeassistant.core import HomeAssistant, callback
+from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import TEMP_CELSIUS
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import (
-    CoordinatorEntity,
     DataUpdateCoordinator,
 )
 
 from intex_spa.intex_spa import IntexSpa
 
-import json
-import logging
-_LOGGER = logging.getLogger(__name__)
-
-from .const import DOMAIN
 from .const import DOMAIN, DATA_CLIENT, DATA_COORDINATOR
 from .model import IntexSpaEntity
 
@@ -56,15 +50,17 @@ class SpaPowerSwitch(IntexSpaEntity, SwitchEntity):
 
     @property
     def is_on(self) -> bool:
+        """Return state of switch"""
         return self.coordinator.data.power
 
     async def async_turn_off(self, **kwargs: Any) -> None:
+        """Turn off switch"""
         status = (await self.spa.async_set_power(False))
         #self._attr_is_on = status.power
         self.coordinator.data = status
 
-
     async def async_turn_on(self, **kwargs: Any) -> None:
+        """Turn on switch"""
         status = (await self.spa.async_set_power(True))
         #self._attr_is_on = status.power
         self.coordinator.data = status
@@ -86,13 +82,15 @@ class SpaFilterSwitch(IntexSpaEntity, SwitchEntity):
 
     @property
     def is_on(self) -> bool:
+        """Return state of switch"""
         return self.coordinator.data.filter
 
     async def async_turn_off(self, **kwargs: Any) -> None:
+        """Turn off switch"""
         await self.spa.async_set_filter(False)
 
-
     async def async_turn_on(self, **kwargs: Any) -> None:
+        """Turn on switch"""
         await self.spa.async_set_filter(True)
 
 class SpaHeaterSwitch(IntexSpaEntity, SwitchEntity):
@@ -110,13 +108,15 @@ class SpaHeaterSwitch(IntexSpaEntity, SwitchEntity):
 
     @property
     def is_on(self) -> bool:
+        """Return state of switch"""
         return self.coordinator.data.heater
 
     async def async_turn_off(self, **kwargs: Any) -> None:
+        """Turn off switch"""
         await self.spa.async_set_heater(False)
 
-
     async def async_turn_on(self, **kwargs: Any) -> None:
+        """Turn on switch"""
         await self.spa.async_set_heater(True)
 
 class SpaBubblesSwitch(IntexSpaEntity, SwitchEntity):
@@ -134,11 +134,13 @@ class SpaBubblesSwitch(IntexSpaEntity, SwitchEntity):
 
     @property
     def is_on(self) -> bool:
+        """Return state of switch"""
         return self.coordinator.data.bubbles
 
     async def async_turn_off(self, **kwargs: Any) -> None:
+        """Turn off switch"""
         await self.spa.async_set_bubbles(False)
 
-
     async def async_turn_on(self, **kwargs: Any) -> None:
+        """Turn on switch"""
         await self.spa.async_set_bubbles(True)

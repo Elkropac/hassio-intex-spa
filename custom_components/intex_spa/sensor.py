@@ -1,3 +1,4 @@
+import logging
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,
@@ -9,15 +10,10 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import TEMP_CELSIUS
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import (
-    CoordinatorEntity,
     DataUpdateCoordinator,
 )
 
-import json
-import logging
-_LOGGER = logging.getLogger(__name__)
-
-from .const import DOMAIN, DATA_CLIENT, DATA_COORDINATOR
+from .const import DOMAIN, DATA_COORDINATOR
 from .model import IntexSpaEntity
 
 _LOGGER = logging.getLogger(__name__)
@@ -34,7 +30,7 @@ async def async_setup_entry(
     async_add_entities([SpaPresetTemperature(coordinator, info)], True)
 
 
-class SpaCurrentTemperature(IntexSpaEntity):
+class SpaCurrentTemperature(IntexSpaEntity, SensorEntity):
     """Representation of a sensor."""
 
     _attr_name = "SPA current temperature"
@@ -64,7 +60,7 @@ class SpaCurrentTemperature(IntexSpaEntity):
     #def extra_state_attributes(self):
     #    return self.attrs
 
-class SpaPresetTemperature(IntexSpaEntity):
+class SpaPresetTemperature(IntexSpaEntity, SensorEntity):
     """Representation of a sensor."""
 
     _attr_name = "SPA preset temperature"

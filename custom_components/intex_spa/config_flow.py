@@ -1,7 +1,6 @@
 """Config flow for Intex SPA integration."""
 from __future__ import annotations
 
-from .spa import Spa
 
 import hashlib
 import logging
@@ -15,6 +14,7 @@ from homeassistant.data_entry_flow import FlowResult
 from homeassistant.exceptions import HomeAssistantError
 
 from .const import ATTR_MANUFACTURER, DOMAIN
+from .spa import Spa
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -38,8 +38,7 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
     # await hass.async_add_executor_job(
     #     your_validate_func, data["username"], data["password"]
     # )
-
-    
+    #
     #try:
     #    spa = get_spa(hass, data["host"], data["port"])
     #except (ConnectionResetError):
@@ -58,10 +57,7 @@ async def validate_input(hass: HomeAssistant, data: dict[str, Any]) -> dict[str,
     data['info']['unique_id'] = unique_id.hexdigest()
     data['title'] = ATTR_MANUFACTURER + " " + info['model']
     
-    #return self.async_create_entry(title=desc, data=data)
     return data
-
-
 
 class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Intex SPA."""
@@ -98,7 +94,6 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return self.async_show_form(
             step_id="user", data_schema=STEP_USER_DATA_SCHEMA, errors=errors
         )
-
 
 class CannotConnect(HomeAssistantError):
     """Error to indicate we cannot connect."""
