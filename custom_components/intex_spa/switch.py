@@ -56,15 +56,12 @@ class SpaPowerSwitch(IntexSpaEntity, SwitchEntity):
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn off switch"""
         status = (await self.spa.async_set_power(False))
-        #self._attr_is_on = status.power
-        self.coordinator.data = status
+        self.coordinator.async_set_updated_data(status)
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn on switch"""
         status = (await self.spa.async_set_power(True))
-        #self._attr_is_on = status.power
-        self.coordinator.data = status
-
+        self.coordinator.async_set_updated_data(status)
 
 class SpaFilterSwitch(IntexSpaEntity, SwitchEntity):
     """Representation of a sensor."""
@@ -87,11 +84,13 @@ class SpaFilterSwitch(IntexSpaEntity, SwitchEntity):
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn off switch"""
-        await self.spa.async_set_filter(False)
+        status = await self.spa.async_set_filter(False)
+        self.coordinator.async_set_updated_data(status)
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn on switch"""
-        await self.spa.async_set_filter(True)
+        status = await self.spa.async_set_filter(True)
+        self.coordinator.async_set_updated_data(status)
 
 class SpaHeaterSwitch(IntexSpaEntity, SwitchEntity):
     """Representation of a sensor."""
@@ -113,11 +112,13 @@ class SpaHeaterSwitch(IntexSpaEntity, SwitchEntity):
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn off switch"""
-        await self.spa.async_set_heater(False)
+        status = await self.spa.async_set_heater(False)
+        self.coordinator.async_set_updated_data(status)
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn on switch"""
-        await self.spa.async_set_heater(True)
+        status = await self.spa.async_set_heater(True)
+        self.coordinator.async_set_updated_data(status)
 
 class SpaBubblesSwitch(IntexSpaEntity, SwitchEntity):
     """Representation of a sensor."""
@@ -139,8 +140,10 @@ class SpaBubblesSwitch(IntexSpaEntity, SwitchEntity):
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn off switch"""
-        await self.spa.async_set_bubbles(False)
+        status = await self.spa.async_set_bubbles(False)
+        self.coordinator.async_set_updated_data(status)
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn on switch"""
-        await self.spa.async_set_bubbles(True)
+        status = await self.spa.async_set_bubbles(True)
+        self.coordinator.async_set_updated_data(status)
