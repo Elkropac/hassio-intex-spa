@@ -80,7 +80,7 @@ class SpaClimate(IntexSpaEntity, ClimateEntity):
     @property
     def hvac_mode(self):
         """Return current operation ie. heat, off"""
-        if self.coordinator.data.power:
+        if self.coordinator.data.heater:
             return HVAC_MODE_HEAT
 
         return HVAC_MODE_OFF
@@ -88,12 +88,12 @@ class SpaClimate(IntexSpaEntity, ClimateEntity):
     async def async_set_hvac_mode(self, hvac_mode):
         """Set HVAC mode."""
         if hvac_mode == HVAC_MODE_OFF:
-            status = await self.spa.async_set_power(False)
+            status = await self.spa.async_set_heaterFalse)
             self.coordinator.async_set_updated_data(status)
             return
 
         if hvac_mode == HVAC_MODE_HEAT:
-            status = await self.spa.async_set_power(True)
+            status = await self.spa.async_set_heater(True)
             self.coordinator.async_set_updated_data(status)
             return
     
