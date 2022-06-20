@@ -1,5 +1,5 @@
-# hassio-intex-spai
- * not working, do not report problems
+# hassio-intex-spa
+ * this repository was created for testing purposes, please use proper integration https://github.com/mathieu-mp/homeassistant-intex-spa
  
  * talks to SPA on port 8990
  * when pairing, the android app sends
